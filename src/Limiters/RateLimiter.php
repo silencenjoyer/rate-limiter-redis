@@ -46,7 +46,7 @@ class RateLimiter implements LimiterInterface
      * @param int $count
      * @return void
      */
-    public function collectUsage(int $count): void
+    public function collectUsage(int $count = 1): void
     {
         $this->counter->increment($count);
     }
@@ -72,7 +72,7 @@ class RateLimiter implements LimiterInterface
         }
         $nextExpectedTime += $interval / IntervalInterface::MICROSECONDS_IN_SECOND;
 
-        $this->collectUsage(1);
+        $this->collectUsage();
         $result = call_user_func($closure);
 
         $sleepTime = $nextExpectedTime - microtime(true);
@@ -94,7 +94,7 @@ class RateLimiter implements LimiterInterface
     public function control(Closure $closure)
     {
         $this->ensureRate();
-        $this->collectUsage(1);
+        $this->collectUsage();
 
         return call_user_func($closure);
     }
