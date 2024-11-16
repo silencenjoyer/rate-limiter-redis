@@ -34,7 +34,7 @@ interface LimiterInterface
      * @param int $count
      * @return void
      */
-    public function collectUsage(int $count): void;
+    public function collectUsage(int $count = 1): void;
 
     /**
      * Stretch the execution evenly according to the amount of time and<br>
