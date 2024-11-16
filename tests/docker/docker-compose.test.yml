@@ -1,0 +1,24 @@
+services:
+  tests:
+    build:
+      context: .
+      dockerfile: ./php/Dockerfile
+    command: bash -c "cd /app && composer install && composer test-coverage"
+    volumes:
+      - ../../:/app
+    networks:
+      - test
+
+  redis:
+    image: redis
+    container_name: redis
+    volumes:
+      - ./redis/data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - test
+
+networks:
+  test:
+  default:

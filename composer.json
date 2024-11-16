@@ -1,0 +1,43 @@
+{
+  "name": "silencenjoyer/rate-limiter",
+  "description": "A rate limiter to control and manage execution flow.",
+  "keywords": [
+    "silencenjoyer",
+    "rate-limiter"
+  ],
+  "homepage": "https://github.com/silencenjoyer/redis-counter",
+  "license": "MIT",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Andrew Gebrich",
+      "email": "an_gebrich@outlook.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^7.4|^8.0",
+    "ext-redis": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Silencenjoyer\\RateLimit\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Silencenjoyer\\RateLimit\\Tests\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
