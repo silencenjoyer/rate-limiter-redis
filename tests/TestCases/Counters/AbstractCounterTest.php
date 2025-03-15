@@ -50,10 +50,9 @@ abstract class AbstractCounterTest extends TestCase
         int $incr
     ): void {
         $counter = $this->createInstance($args);
-        $counter->setRate($rate);
         $before = (int) $counter->current();
 
-        $counter->increment($incr);
+        $counter->increment($incr, $rate->getInterval());
 
         $this->assertEquals($before + $incr, $counter->current());
     }

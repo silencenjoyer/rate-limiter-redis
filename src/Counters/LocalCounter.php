@@ -4,7 +4,6 @@ namespace Silencenjoyer\RateLimit\Counters;
 
 use Silencenjoyer\RateLimit\Intervals\IntervalInterface;
 use Silencenjoyer\RateLimit\Intervals\Interval;
-use Silencenjoyer\RateLimit\Rates\RateInterface;
 
 /**
  * Class ArrayCounter
@@ -15,7 +14,6 @@ class LocalCounter implements CounterInterface
 {
     protected int $value;
     protected int $expiry;
-    protected RateInterface $rate;
 
     protected function getCurrentTimeInMilliseconds(): int
     {
@@ -40,18 +38,6 @@ class LocalCounter implements CounterInterface
         unset($this->value, $this->expiry);
     }
 
-    public function setRate(RateInterface $rate): CounterInterface
-    {
-        $this->rate = $rate;
-
-        return $this;
-    }
-
-    public function getRate(): RateInterface
-    {
-        return $this->rate;
-    }
-
     public function current(): ?int
     {
         $this->cleanExpired();
@@ -63,12 +49,12 @@ class LocalCounter implements CounterInterface
         return $this->value;
     }
 
-    public function increment(int $incr): void
+    public function increment(int $incr, IntervalInterface $interval): void
     {
         $this->cleanExpired();
 
         $now = $this->getCurrentTimeInMilliseconds();
-        $ttl = $this->rate->getInterval()->toMilliseconds();
+        $ttl = $interval->toMilliseconds();
 
         if (!isset($this->value)) {
             $this->value = 0;

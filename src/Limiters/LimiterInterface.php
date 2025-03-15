@@ -18,8 +18,9 @@ interface LimiterInterface
      * Constructor.
      *
      * @param CounterInterface $counter
+     * @param RateInterface $rate
      */
-    public function __construct(CounterInterface $counter);
+    public function __construct(CounterInterface $counter, RateInterface $rate);
 
     /**
      * An indication of whether the {@see RateInterface} has been exceeded.
