@@ -18,10 +18,8 @@ use Silencenjoyer\RateLimit\Intervals\Interval;
 use Silencenjoyer\RateLimit\Limiters\RateLimiter;
 use Silencenjoyer\RateLimit\Rates\Rate;
 
-$counter = (new RedisCounter('rate:send:api', new Redis()))
-    ->setRate(new Rate(10, new Interval('PT1S')))
-;
-$rateLimiter = new RateLimiter($counter);
+$counter = new RedisCounter('rate:send:api', new Redis());
+$rateLimiter = new RateLimiter($counter, new Rate(10, new Interval('PT1S')));
 
 foreach ($messages as $message) {
     $rateLimiter->stretch(function() use ($api) {
@@ -37,10 +35,8 @@ use Silencenjoyer\RateLimit\Rates\Rate;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$counter = (new LocalCounter())
-    ->setRate(new Rate(5, new Interval('PT1S')))
-;
-$rateLimiter = new RateLimiter($counter);
+$counter = new LocalCounter();
+$rateLimiter = new RateLimiter($counter, new Rate(5, new Interval('PT1S')));
 
 if (!$rateLimiter->isExceed()) {
     $rateLimiter->collectUsage();

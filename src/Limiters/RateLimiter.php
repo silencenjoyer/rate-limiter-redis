@@ -5,6 +5,7 @@ namespace Silencenjoyer\RateLimit\Limiters;
 use Closure;
 use Silencenjoyer\RateLimit\Counters\CounterInterface;
 use Silencenjoyer\RateLimit\Intervals\IntervalInterface;
+use Silencenjoyer\RateLimit\Rates\RateInterface;
 
 /**
  * Class RateLimiter
@@ -14,10 +15,12 @@ use Silencenjoyer\RateLimit\Intervals\IntervalInterface;
 class RateLimiter implements LimiterInterface
 {
     protected CounterInterface $counter;
+    protected RateInterface $rate;
 
-    public function __construct(CounterInterface $counter)
+    public function __construct(CounterInterface $counter, RateInterface $rate)
     {
         $this->counter = $counter;
+        $this->rate = $rate;
     }
 
     /**
@@ -38,7 +41,7 @@ class RateLimiter implements LimiterInterface
      */
     public function isExceed(): bool
     {
-        return $this->counter->current() >= $this->counter->getRate()->getMaxExecutions();
+        return $this->counter->current() >= $this->rate->getMaxExecutions();
     }
 
     /**
@@ -48,7 +51,7 @@ class RateLimiter implements LimiterInterface
      */
     public function collectUsage(int $count = 1): void
     {
-        $this->counter->increment($count);
+        $this->counter->increment($count, $this->rate->getInterval());
     }
 
     /**
@@ -60,8 +63,8 @@ class RateLimiter implements LimiterInterface
     {
         $this->ensureRate();
 
-        $microseconds = $this->counter->getRate()->getInterval()->toMicroseconds();
-        $maxExecutions = $this->counter->getRate()->getMaxExecutions();
+        $microseconds = $this->rate->getInterval()->toMicroseconds();
+        $maxExecutions = $this->rate->getMaxExecutions();
         // Average interval between executions in microseconds
         $interval = $microseconds / $maxExecutions;
 

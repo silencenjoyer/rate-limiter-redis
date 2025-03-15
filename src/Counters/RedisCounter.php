@@ -6,7 +6,6 @@ use Redis;
 use RedisException;
 use Silencenjoyer\RateLimit\Intervals\Interval;
 use Silencenjoyer\RateLimit\Intervals\IntervalInterface;
-use Silencenjoyer\RateLimit\Rates\RateInterface;
 
 /**
  * Class RedisCounter
@@ -16,34 +15,12 @@ use Silencenjoyer\RateLimit\Rates\RateInterface;
 class RedisCounter implements CounterInterface
 {
     protected Redis $redis;
-    protected RateInterface $rate;
     protected string $id;
 
     public function __construct(string $id, Redis $redis)
     {
         $this->id = $id;
         $this->redis = $redis;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param RateInterface $rate
-     * @return $this
-     */
-    public function setRate(RateInterface $rate): self
-    {
-        $this->rate = $rate;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @return RateInterface
-     */
-    public function getRate(): RateInterface
-    {
-        return $this->rate;
     }
 
     /**
@@ -58,13 +35,15 @@ class RedisCounter implements CounterInterface
 
     /**
      * {@inheritDoc}
+     * @param int $incr
+     * @param IntervalInterface $interval
      * @return void
      * @throws RedisException
      */
-    public function increment(int $incr): void
+    public function increment(int $incr, IntervalInterface $interval): void
     {
         $this->redis->incr($this->id, $incr);
-        $ttl = $this->rate->getInterval()->toMilliseconds();
+        $ttl = $interval->toMilliseconds();
         $this->redis->pexpire($this->id, $ttl, 'NX');
     }
 

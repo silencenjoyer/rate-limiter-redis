@@ -3,7 +3,6 @@
 namespace Silencenjoyer\RateLimit\Counters;
 
 use Silencenjoyer\RateLimit\Intervals\IntervalInterface;
-use Silencenjoyer\RateLimit\Rates\RateInterface;
 
 /**
  * Interface CounterInterface
@@ -12,21 +11,6 @@ use Silencenjoyer\RateLimit\Rates\RateInterface;
  */
 interface CounterInterface
 {
-    /**
-     * An {@see RateInterface} setter.
-     *
-     * @param RateInterface $rate
-     * @return self
-     */
-    public function setRate(RateInterface $rate): self;
-
-    /**
-     * An {@see RateInterface} getter.
-     *
-     * @return RateInterface
-     */
-    public function getRate(): RateInterface;
-
     /**
      * Current counter value.
      *
@@ -38,9 +22,10 @@ interface CounterInterface
      * Increment the counter.
      *
      * @param int $incr
+     * @param IntervalInterface $interval
      * @return void
      */
-    public function increment(int $incr): void;
+    public function increment(int $incr, IntervalInterface $interval): void;
 
     /**
      * Indicates the remaining interval until the rate window is reset.

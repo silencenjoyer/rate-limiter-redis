@@ -1,15 +1,12 @@
 <?php
 
-namespace Limiters;
+namespace Silencenjoyer\RateLimit\Tests\TestCases\Limiters;
 
 use Closure;
-use DateMalformedIntervalStringException;
 use PHPUnit\Framework\TestCase;
 use Silencenjoyer\RateLimit\Counters\CounterInterface;
 use Silencenjoyer\RateLimit\Counters\LocalCounter;
-use Silencenjoyer\RateLimit\Intervals\Interval;
 use Silencenjoyer\RateLimit\Limiters\LimiterInterface;
-use Silencenjoyer\RateLimit\Rates\RateInterface;
 use stdClass;
 
 /**
@@ -19,28 +16,11 @@ use stdClass;
  */
 abstract class AbstractLimiterTest extends TestCase
 {
-    abstract protected function createInstance(CounterInterface $counter): LimiterInterface;
+    abstract protected function createInstance(CounterInterface $counter, int $exec, int $interval): LimiterInterface;
 
-    /**
-     * @throws DateMalformedIntervalStringException
-     */
-    protected function createCounter(int $exec, int $interval): CounterInterface
+    protected function createCounter(): CounterInterface
     {
-        $counter = new LocalCounter();
-
-        $rate = $this->createMock(RateInterface::class);
-        $rate->expects(self::any())
-            ->method('getMaxExecutions')
-            ->willReturn($exec)
-        ;
-        $rate->expects(self::any())
-            ->method('getInterval')
-            ->willReturn(new Interval(sprintf('PT%dS', $interval)))
-        ;
-
-        $counter->setRate($rate);
-
-        return $counter;
+        return new LocalCounter();
     }
 
     /**
@@ -73,13 +53,10 @@ abstract class AbstractLimiterTest extends TestCase
      * @param int $iterations
      * @param int $interval
      * @return void
-     * @throws DateMalformedIntervalStringException
      */
     public function testControl(int $exec, int $iterations, int $interval): void
     {
-        $limiter = $this->createInstance(
-            $this->createCounter($exec, $interval)
-        );
+        $limiter = $this->createInstance($this->createCounter(), $exec, $interval);
 
         $mock = $this->getMockBuilder(stdClass::class)
             ->addMethods(['__invoke'])
@@ -108,13 +85,10 @@ abstract class AbstractLimiterTest extends TestCase
      * @param int $iterations
      * @param int $interval
      * @return void
-     * @throws DateMalformedIntervalStringException
      */
     public function testStretch(int $exec, int $iterations, int $interval): void
     {
-        $limiter = $this->createInstance(
-            $this->createCounter($exec, $interval)
-        );
+        $limiter = $this->createInstance($this->createCounter(), $exec, $interval);
 
         $mock = $this->getMockBuilder(stdClass::class)
             ->addMethods(['__invoke'])
