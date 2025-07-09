@@ -1,11 +1,12 @@
 {
-  "name": "silencenjoyer/rate-limiter",
-  "description": "A rate limiter to control and manage execution flow.",
+  "name": "silencenjoyer/rate-limiter-redis",
+  "description": "Redis extension for silencenjoyer/rate-limiter",
   "keywords": [
     "silencenjoyer",
-    "rate-limiter"
+    "rate-limiter",
+    "rate-limiter-redis"
   ],
-  "homepage": "https://github.com/silencenjoyer/redis-counter",
+  "homepage": "https://github.com/silencenjoyer/redis-counter-redis",
   "license": "MIT",
   "type": "library",
   "authors": [
@@ -17,19 +18,20 @@
   ],
   "require": {
     "php": "^7.4|^8.0",
-    "ext-redis": "*"
+    "ext-redis": "*",
+    "silencenjoyer/rate-limiter": "^3.0.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.0"
   },
   "autoload": {
     "psr-4": {
-      "Silencenjoyer\\RateLimit\\": "src"
+      "Silencenjoyer\\RateLimitRedis\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Silencenjoyer\\RateLimit\\Tests\\": "tests"
+      "Silencenjoyer\\RateLimitRedis\\Tests\\": "tests"
     }
   },
   "scripts": {

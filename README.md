@@ -1,19 +1,19 @@
 # Short description of the package
 
-This package provides possibility to control and manage execution flow.
+This package is an extension for `silencenjoyer/rate-limiter` that allows you to measure the rate using redis.
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require silencenjoyer/rate-limiter
+composer require silencenjoyer/rate-limiter-redis
 ```
 
 ## Usage
 
 ```php
-use Silencenjoyer\RateLimit\Counters\RedisCounter;
+use Silencenjoyer\RateLimitRedis\Counters\RedisCounter;
 use Silencenjoyer\RateLimit\Intervals\Interval;
 use Silencenjoyer\RateLimit\Limiters\RateLimiter;
 use Silencenjoyer\RateLimit\Rates\Rate;
@@ -26,23 +26,6 @@ foreach ($messages as $message) {
         $api->post($message);
     });
 }
-```
-```php
-use Silencenjoyer\RateLimit\Counters\LocalCounter;
-use Silencenjoyer\RateLimit\Intervals\Interval;
-use Silencenjoyer\RateLimit\Limiters\RateLimiter;
-use Silencenjoyer\RateLimit\Rates\Rate;
-
-require_once __DIR__ . '/vendor/autoload.php';
-
-$counter = new LocalCounter();
-$rateLimiter = new RateLimiter($counter, new Rate(5, new Interval('PT1S')));
-
-if (!$rateLimiter->isExceed()) {
-    $rateLimiter->collectUsage();
-    // do some logic
-}
-throw new RuntimeException('Rate limit has been exceeded.');
 ```
 
 ### Testing

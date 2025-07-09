@@ -1,30 +1,22 @@
 <?php
 
-namespace Silencenjoyer\RateLimit\Tests\TestCases\Counters;
+namespace Silencenjoyer\RateLimitRedis\Tests\TestCases\Counters;
 
+use PHPUnit\Framework\TestCase;
 use Redis;
-use Silencenjoyer\RateLimit\Counters\RedisCounter;
+use Silencenjoyer\RateLimitRedis\Counters\RedisCounter;
 use Silencenjoyer\RateLimit\Intervals\Interval;
 use Silencenjoyer\RateLimit\Rates\Rate;
+use Silencenjoyer\RateLimit\Rates\RateInterface;
 
 /**
  * Class RedisCounterTest
  *
  * @package Counters
  */
-class RedisCounterTest extends AbstractCounterTest
+class RedisCounterTest extends TestCase
 {
     /**
-     * {@inheritDoc}
-     * @return string
-     */
-    public function getClassName(): string
-    {
-        return RedisCounter::class;
-    }
-
-    /**
-     * {@inheritDoc}
      * @return array[]
      */
     public function incrementProvider(): array
@@ -41,5 +33,23 @@ class RedisCounterTest extends AbstractCounterTest
                 3,
             ],
         ];
+    }
+
+    /**
+     * @covers
+     * @dataProvider incrementProvider
+     * @param array $args
+     * @param RateInterface $rate
+     * @param int $incr
+     * @return void
+     */
+    public function testIncrement(array $args, RateInterface $rate, int $incr): void
+    {
+        $counter = new RedisCounter(...$args);
+        $before = (int) $counter->current();
+
+        $counter->increment($incr, $rate->getInterval());
+
+        $this->assertEquals($before + $incr, $counter->current());
     }
 }

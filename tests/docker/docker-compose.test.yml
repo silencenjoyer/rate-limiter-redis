@@ -3,7 +3,8 @@ services:
     build:
       context: .
       dockerfile: ./php/Dockerfile
-    command: bash -c "cd /app && composer install && composer test-coverage"
+#    command: bash -c "cd /app && composer install --dev && composer test-coverage"
+    tty: true
     volumes:
       - ../../:/app
     networks:

@@ -1,9 +1,10 @@
 <?php
 
-namespace Silencenjoyer\RateLimit\Counters;
+namespace Silencenjoyer\RateLimitRedis\Counters;
 
 use Redis;
 use RedisException;
+use Silencenjoyer\RateLimit\Counters\CounterInterface;
 use Silencenjoyer\RateLimit\Intervals\Interval;
 use Silencenjoyer\RateLimit\Intervals\IntervalInterface;
 
