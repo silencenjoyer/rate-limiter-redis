@@ -3,3 +3,4 @@ tests/phpunit.cache
 tests/docker/redis
 vendor
 composer.lock
+.DS_Store
